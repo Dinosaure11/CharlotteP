@@ -1,0 +1,27 @@
+---
+ - name: httpd is there
+   hosts: Node3
+   tasks:
+     - name: ensure httpd is installed
+       yum:
+         name: httpd
+         state: latest
+     
+     - name: start and enable httpd
+       service:
+               name: httpd
+               state: started
+               enabled: yes
+
+     - name: allow http to the firewall 
+       ansible.posix.firewalld:
+               service: https
+               permanent: yes
+               state: enabled
+
+     - name: add the line to the file
+       ansible.builtin.lineinfile:
+               path: /var/www/html/index.html
+               line: "This is from my playbook"
+               create: yes
+
